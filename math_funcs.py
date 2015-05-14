@@ -38,8 +38,21 @@ class Matrix(MatrixVector):
                 self.vals[i] = [self.vals[i]]
 
 
+
     def make_by_func(self, r, c, func):
         self.vals = [[func(j,i) for j in range(c)] for i in range(r)]
+
+
+    def transpose(self):
+        r, c = self.shape()
+        newMat = Matrix([[0]])
+        def f(i,j):
+            return 0
+        newMat.make_by_func(c, r, f)
+        for i in range(r):
+            for j in range(c):
+                newMat.vals[i][j] = self.vals[j][i]
+        return newMat
 
 
     def get_total(self):
@@ -319,5 +332,9 @@ if __name__ == '__main__':
             return 0
     A.make_by_func(10,10,f)
     #print(A)
+
+    print("transpose")
+    print(Matrix(B))
+    print(Matrix(B).transpose())
 
     drake_pop()
