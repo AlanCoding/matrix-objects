@@ -37,10 +37,21 @@ class Matrix(MatrixVector):
             for i in range(len(self.vals)):
                 self.vals[i] = [self.vals[i]]
 
+
+    def make_by_func(self, r, c, func):
+        self.vals = [[func(j,i) for j in range(c)] for i in range(r)]
+
+
+    def get_total(self):
+        A = self.vals
+        r, c = self.shape()
+        return sum(sum(A[i][j] for j in range(c)) for i in range(r))
+
     def __str__(self):
         rtrn = ""
-        for i in range(len(self.vals)):
-            for j in range(len(self.vals[0])):
+        r, c = self.shape()
+        for i in range(r):
+            for j in range(c):
                 rtrn += str(self.vals[i][j])+" "
             rtrn += " \n"
         return rtrn
@@ -158,14 +169,6 @@ class Vector(MatrixVector):
         return self.__add__(other.vector_scalar_multiply(-1))
 
 
-    # def sum(self,*vectors):
-    #     u = self.vals
-    #     if self.is_inconsistent(*vectors):
-    #         raise ShapeException()
-    #     return [u[i]+sum(v[i] for v in vectors)
-    #             for i in range(len(vectors[0]))]
-
-
     def dot(self, other):
         w = self.vals
         y = other.vals
@@ -219,6 +222,37 @@ class Vector(MatrixVector):
         v = self.vals
         u = other.vals
         return sum(i==j for i,j in zip(v,u))
+
+
+def drake_pop():
+
+    S = Matrix([[0 , 0.25 , 0.6 , 0.8 , 0.15 , 0 ],
+    [0.7 , 0 , 0 , 0 , 0 , 0 ],
+    [0 , 0.95 , 0 , 0 , 0 , 0 ],
+    [0 , 0 , 0.9 , 0 , 0 , 0 ],
+    [0 , 0 , 0 , 0.9 , 0 , 0 ],
+    [0 , 0 , 0 , 0 , 0.5 , 0 ]])
+
+    P_st = Matrix([[0]])
+    def f(i,j):
+        if i==0 and j==0:
+            return 10
+        else:
+            return 0
+    P_st.make_by_func(6,6,f)
+    print(S*P_st)
+    print((S*P_st).get_total())
+
+    def number_in_future(year):
+        P = P_st
+        for i in range(year):
+            P = S*P
+        return P.get_total()
+
+    print(number_in_future(1))
+    print(number_in_future(20))
+    print(number_in_future(40))
+
 
 
 if __name__ == '__main__':
@@ -275,3 +309,15 @@ if __name__ == '__main__':
 #    print(Matrix([[1, 1, 1], [0, 0, 0]]) * Matrix([[1, 1], [2, 2], [3, 3]]))
 
     print(Matrix([[0, 1], [1, 0]]) == Matrix([[1, 1], [0, 0]])) # results in False
+
+
+    A = Matrix([[0]])
+    def f(i,j):
+        if i==j:
+            return 1
+        else:
+            return 0
+    A.make_by_func(10,10,f)
+    #print(A)
+
+    drake_pop()

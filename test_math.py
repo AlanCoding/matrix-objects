@@ -211,3 +211,13 @@ def test_matrix_matrix_multiply_checks_shapes():
     """Shape Rule: The number of columns of the first matrix must equal the
     number of rows of the second matrix."""
     A*D
+
+def test_identity_matrix():
+    A = Matrix([[0]])
+    def f(i,j):
+        if i==j:
+            return 1
+        else:
+            return 0
+    A.make_by_func(2,2,f)
+    assert A == Matrix([[1,0],[0,1]])
